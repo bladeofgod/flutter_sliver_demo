@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 
 
@@ -23,7 +24,7 @@ class DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin{
 
     super.initState();
     scrollController = ScrollController(initialScrollOffset: 0);
-    tabController = TabController(vsync: this,length: 3);
+    tabController = TabController(vsync: this,length: 4);
   }
   @override
   void dispose() {
@@ -60,11 +61,22 @@ class DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin{
                 ),
               ),
               bottom: TabBar(
+                indicatorSize: TabBarIndicatorSize.label,
                 controller: tabController,
+                //isScrollable: true,
                 tabs: <Widget>[
-                  Tab(text: "tabOne",),
+                  Tab(child: Container(
+                    width: 60,
+                    child: Text("tabOne"),
+                  ),),
                   Tab(text: "tabTwo",),
                   Tab(text: "tabThree",),
+                  Tab(
+                    child: Container(
+                      width: 300,
+
+                    ),
+                  ),
                 ],
               ) ,
             ),
@@ -73,13 +85,49 @@ class DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin{
         body: TabBarView(
           controller: tabController,
           children: <Widget>[
-            _buildListView("one"),
+            buildWaterFall(),
+            //_buildListView("one"),
             _buildListView("two"),
             _buildListView("three"),
+            _buildListView("four"),
 
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildWaterFall(){
+    List items = List<int>.generate(20, (index){
+      return index;
+    });
+    return WaterfallFlow.builder(
+        padding: EdgeInsets.all(5),
+        gridDelegate: SliverWaterfallFlowDelegate(
+          crossAxisCount: 2,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+          /// 可以在尾部 加入特殊布局的item
+          //lastChildLayoutTypeBuilder: ,
+        ),
+        itemCount: 30,
+        itemBuilder: (ctx,index){
+          if(index % 2 == 0){
+            return Container(
+              color: Colors.red,
+              width: double.infinity,
+              height: 300,
+              child: Text("$index",style: TextStyle(fontSize: 20),),
+            );
+          }else{
+            return Container(
+              color: Colors.cyanAccent,
+              width: double.infinity,
+              height: 200,
+              child: Text("$index",style: TextStyle(fontSize: 20),),
+            );
+          }
+        }
     );
   }
 
